@@ -1,5 +1,6 @@
 import React from 'react';
 import './allStyles.css';
+import PropTypes from 'prop-types';
 
 class Products extends React.Component {
     handleAddToCart = (e, item) => {
@@ -27,6 +28,10 @@ class Products extends React.Component {
             </div>
         )
     }
+}
+
+Products.propTypes = {
+    allProducts: PropTypes.array.isRequired,
 }
 
 export default Products;

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function Cart(props) {
     return(
@@ -9,6 +10,10 @@ function Cart(props) {
             </button>
         </div>
     )
+}
+
+Cart.propTypes = {
+    cartDetails: PropTypes.array.isRequired,
 }
 
 export default Cart;

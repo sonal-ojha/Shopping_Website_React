@@ -6,24 +6,24 @@ import Footer from './components/Footer';
 import Products from './components/Products';
 import Cart from './components/Cart';
 import CartDetails from './components/cartDetails';
+import { addItemToCart } from './actions/addToCart.action';
+import { connect } from 'react-redux';
+import { allProducts } from './actions/allProducts.action';
 
 // Class Component: - Smart/ Container component
 class App extends Component {
   state = {
-    productList: data,
-    cartList: [],
     displayType: 'allProducts',
   };
 
+  componentDidMount() {
+    const { _allProducts } = this.props;
+    _allProducts(data);
+  }
+
   addItemToCart = (item) => {
-    console.log(' added item =', item);
-    const { cartList } = this.state;
-    const newCartDetails = [...cartList];
-    newCartDetails.push(item);
-    console.log('New Added Items = ', newCartDetails);
-    this.setState({
-      cartList: newCartDetails,
-    });
+    const { _addItemToCart } = this.props;
+    _addItemToCart(item);
   }
 
   handleDisplayType = () => {
@@ -40,13 +40,14 @@ class App extends Component {
   }
 
   render() {
-    const { productList, cartList, displayType } = this.state;
+    const { displayType } = this.state;
+    const { allCartItems, productList } = this.props;
     return (
       <div className="App">
         <Header msg="Shop here!!" className="head_container">
           <h5>Amazing Tech gadgeds here !! </h5>
           <Cart
-            cartDetails={cartList}
+            cartDetails={allCartItems}
             showDetails={this.handleDisplayType}
             displayType={displayType}
           />
@@ -58,7 +59,7 @@ class App extends Component {
           />
         )}
         {displayType !== 'allProducts' && (
-          <CartDetails cartItems={cartList} />
+          <CartDetails cartItems={allCartItems} />
         )}
         <Footer />
       </div>
@@ -66,4 +67,18 @@ class App extends Component {
   }
 }
 
-export default App;
+const mapStoreToProps = (store) => ({
+  allCartItems: store.cart.items,
+  productList: store.allProducts.items,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  _addItemToCart: (item) => {
+    dispatch(addItemToCart(item))
+  },
+  _allProducts: (data) => {
+    dispatch(allProducts(data))
+  },
+})
+
+export default connect(mapStoreToProps, mapDispatchToProps)(App);
